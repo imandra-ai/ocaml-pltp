@@ -1,4 +1,4 @@
-# PLTP: An independent reproduction of the Boyer-Moore Pure Lisp Theorem Prover
+# OCaml PLTP: An independent reproduction of the Boyer-Moore Pure Lisp Theorem Prover
 
 A fully automatic inductive theorem prover for a logic based on Pure Lisp.
 Modeled on the original Boyer-Moore prover presented in Moore's PhD, 1973.
@@ -7,7 +7,7 @@ Modeled on the original Boyer-Moore prover presented in Moore's PhD, 1973.
 
 The original Boyer-Moore Pure Lisp Theorem Prover is the "big bang" of the universe (multiverse!) of automated induction.
 
-It's an incredible thrill to work through their original design and reproduce the proofs independently. J Moore's PhD thesis is written in a way that makes this possible. Sadly, most works in automated reasoning do not have this property. We should all strive to write more like J Moore and Bob Boyer.
+It's an incredible thrill to work through their original design and reproduce the proofs independently. J Moore's PhD thesis is written in a way that makes this possible. Sadly, many works in automated reasoning do not have this property. We should all strive to write more like J Moore and Bob Boyer.
 
 PLTP represents many aspects of automated induction in their most essential form.
 Studying PLTP is a great way to learn about simplification, induction schemes, generalisation, fertilisation, and the interplay between recursion and induction.
@@ -23,7 +23,7 @@ Examples can be found at the end of `Pltp.ml`.
 An example proof:
 
 ```
-# let _ = prove(Equal(f_reverse(f_reverse(c_a)), c_a));;
+# prove(Equal(f_reverse(f_reverse(c_a)), c_a));;
 
 Theorem to be proved:
 
@@ -161,10 +161,14 @@ Evaluation yields:
 T
 
 Q.E.D.
-
-- : unit = ()
-#
 ```
+
+# References
+
+* [Computational Logic: Structure Sharing and Proof of Program Properties, J S. Moore's PhD thesis, University of Edinburgh, 1973](http://www.cs.utexas.edu/users/moore/publications/Moore-Thesis-1973-OCR.pdf)
+
+* [Proving Theorems about LISP Functions, R.S. Boyer and J S. Moore. Journal of the Association for Computing Machinery, 22(1), 1975, pp.129-144](http://www.cs.utexas.edu/users/moore/publications/bm75.pdf)
+
 
 # Contact
 
@@ -172,4 +176,6 @@ Grant Passmore, Aesthetic Integration
 
 grant@aestheticintegration.com
 
-www.imandra.ai
+http://www.imandra.ai
+
+http://www.cl.cam.ac.uk/~gp351
