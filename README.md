@@ -14,8 +14,161 @@ Studying PLTP is a great way to learn about simplification, induction schemes, g
 
 Did you know that PLTP could prove `(EQUAL (REV (REV x)) x)` fully automatically in 1973, without any lemmas? 
 
+# How
+
+From an OCaml toplevel, execute `#use "Pltp.ml";;`
+
+Examples can be found at the end of `Pltp.ml`.
+
+An example proof:
+
+```
+# let _ = prove(Equal(f_reverse(f_reverse(c_a)), c_a));;
+
+Theorem to be proved:
+
+(EQUAL (REVERSE (REVERSE A)) A)
+
+Must try induction.
+
+Induct on A.
+
+The theorem to be proved is now:
+
+(AND (EQUAL (REVERSE (REVERSE NIL)) NIL)
+     (IMPLIES (EQUAL (REVERSE (REVERSE A)) A)
+              (EQUAL (REVERSE (REVERSE (CONS A1 A))) (CONS A1 A))))
+
+Evaluation yields:
+
+(COND (COND (EQUAL (REVERSE (REVERSE A)) A)
+            (COND (EQUAL (REVERSE (APPEND (REVERSE A) (CONS A1 NIL)))
+                         (CONS A1 A))
+                  T NIL)
+            T)
+      T NIL)
+
+Normalizes to:
+
+(COND (EQUAL (REVERSE (REVERSE A)) A)
+      (EQUAL (REVERSE (APPEND (REVERSE A) (CONS A1 NIL))) (CONS A1 A))
+      T)
+
+Fertilize with (EQUAL (REVERSE (REVERSE A)) A).
+
+The theorem to be proved is now:
+
+(COND (EQUAL (REVERSE (APPEND (REVERSE A) (CONS A1 NIL)))
+             (CONS A1 (REVERSE (REVERSE A))))
+      T (*1))
+
+Generalize common subterms by replacing (REVERSE A) by GENRL1.
+
+The generalized term is:
+
+(COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+             (CONS A1 (REVERSE GENRL1)))
+      T (*1))
+
+Must try induction.
+
+Merged two faults into one.
+
+Induct on GENRL1.
+
+The theorem to be proved is now:
+
+(AND (COND (EQUAL (REVERSE (APPEND NIL (CONS A1 NIL)))
+                  (CONS A1 (REVERSE NIL)))
+           T (*1))
+     (IMPLIES (COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                           (CONS A1 (REVERSE GENRL1)))
+                    T (*1))
+              (COND (EQUAL (REVERSE (APPEND (CONS GENRL11 GENRL1)
+                                            (CONS A1 NIL)))
+                           (CONS A1 (REVERSE (CONS GENRL11 GENRL1))))
+                    T (*1))))
+
+Evaluation yields:
+
+(COND (COND (COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                         (CONS A1 (REVERSE GENRL1)))
+                  T (*1))
+            (COND (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                                       (CONS GENRL11 NIL))
+                               (CONS A1
+                                     (APPEND (REVERSE GENRL1)
+                                             (CONS GENRL11 NIL))))
+                        T (*1))
+                  T NIL)
+            T)
+      T NIL)
+
+Normalizes to:
+
+(COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+             (CONS A1 (REVERSE GENRL1)))
+      (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                           (CONS GENRL11 NIL))
+                   (CONS A1 (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+            T (*1))
+      (COND (*1)
+            (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                                 (CONS GENRL11 NIL))
+                         (CONS A1
+                               (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+                  T (*1))
+            T))
+
+Reduces to:
+
+(COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+             (CONS A1 (REVERSE GENRL1)))
+      (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                           (CONS GENRL11 NIL))
+                   (CONS A1 (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+            T (*1))
+      (COND (*1)
+            (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                                 (CONS GENRL11 NIL))
+                         (CONS A1
+                               (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+                  T T)
+            T))
+
+Normalizes to:
+
+(COND (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+             (CONS A1 (REVERSE GENRL1)))
+      (COND (EQUAL (APPEND (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                           (CONS GENRL11 NIL))
+                   (CONS A1 (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+            T (*1))
+      T)
+
+Fertilize with (EQUAL (REVERSE (APPEND GENRL1 (CONS A1 NIL)))
+                      (CONS A1 (REVERSE GENRL1))).
+
+The theorem to be proved is now:
+
+(COND (COND (EQUAL (APPEND (CONS A1 (REVERSE GENRL1)) (CONS GENRL11 NIL))
+                   (CONS A1 (APPEND (REVERSE GENRL1) (CONS GENRL11 NIL))))
+            T (*1))
+      T (*2))
+
+Evaluation yields:
+
+T
+
+Q.E.D.
+
+- : unit = ()
+#```
+
 # Contact
 
 Grant Passmore, Aesthetic Integration
+
 grant@aestheticintegration.com
+
 www.imandra.ai
